@@ -4,11 +4,11 @@ from django.contrib.auth.models import User
 
 class UserProfile(models.Model):
     TYPE = (
-        ('docter','Docter'),
+        ('doctor','Doctor'),
         ('patinet','Patinet'),
     )
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     name = models.CharField(max_length=50, verbose_name='Full Name',)
     userType = models.CharField(max_length=10, choices=TYPE, default='patinet', verbose_name='User Type')
 
@@ -23,3 +23,6 @@ class Time(models.Model):
 
     def __str__(self):
         return self.doctor.name + self.start + 'No patient' if self.patient is null else self.patient.name
+
+    def get_absolute_url(self):
+        return reverse('detail', kwargs={'id':self.id })

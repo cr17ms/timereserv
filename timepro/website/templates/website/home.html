@@ -1,0 +1,6 @@
+<a href="{% url 'addtime' %}">Add new time</a>
+{% if doctor_times %}
+    {{doctor_times}}
+{% elif patient_times%}
+    {{patient_times}}
+{% endif %}
