@@ -52,14 +52,17 @@ def signin(request):
 
 @login_required
 def home(request):
+    context = {'doctor': True}
     if request.user.profile.userType == 'doctor':
-        doctor_times = Time.objects.filter(start__gt=timezone.now())
-        doctor_times = doctor_times.filter(doctor=request.user.profile)
-        return render(request, 'website/home.html', dict(doctor_times))
+        doctor_times = Time.objects.filter(doctor=request.user.profile)
+        context['doctor_times'] = doctor_times
     elif request.user.profile.userType == 'patient':
+        doctor = False
         patient_times = Time.objects.filter(start__gt=datetime.now())
         patient_times = patient_times.filter(patient=request.user.profile)
-        return render(request, 'website/home.html', dict(patient_times))
+        context['patient_times'] = patient_times
+        context['doctor'] = False
+    return render(request, 'website/home.html', context)
 
 @login_required
 def signout(request):
@@ -70,6 +73,19 @@ def signout(request):
 def addtime(request):
     if request.method == 'POST':
         form = AddTimeForm(request.POST)
+        if form.is_valid():
+            day = form.cleaned_data['day']
+            start_time = datetime.combine(day, form.cleaned_data['start_time'])
+            end_time = datetime.combine(day, form.cleaned_data['end_time'])
+            number = form.cleaned_data['number']
+            delta_time = end_time - start_time
+            delta_division = delta_time / number
+            end_time = start_time + delta_division
+            for i in range(number):
+                Time.objects.create(doctor=request.user.profile, start=start_time, end=end_time)
+                start_time = end_time
+                end_time += delta_division
+            return redirect('home')
     else:
         form = AddTimeForm()
     return render(request, 'website/addtime.html', {'form': form})

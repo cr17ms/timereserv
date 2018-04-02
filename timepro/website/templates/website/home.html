@@ -1,6 +1,15 @@
-<a href="{% url 'addtime' %}">Add new time</a>
+{% if doctor %}
+  <a href="{% url 'addtime' %}">Add new time</a>
+    </br>
+{% endif %}
 {% if doctor_times %}
-    {{doctor_times}}
+    {% for item in doctor_times%}
+      Doctor: {{item.doctor}}</br>
+      From: {{item.start}}</br>
+      To: {{item.end}}</br>
+      Patient: {{item.patient}}</br>
+      ===========</br>
+    {% endfor %}
 {% elif patient_times%}
     {{patient_times}}
 {% endif %}

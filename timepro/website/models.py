@@ -22,7 +22,7 @@ class Time(models.Model):
     patient = models.ForeignKey(UserProfile, null=True, verbose_name='Patient', on_delete=models.CASCADE, related_name='patient')
 
     def __str__(self):
-        return self.doctor.name + self.start + 'No patient' if self.patient is null else self.patient.name
+        return self.doctor.name + ' @ ' + str(self.start) + ' For ' + 'No patient' if self.patient is None else self.patient.name
 
     def get_absolute_url(self):
         return reverse('detail', kwargs={'id':self.id })
