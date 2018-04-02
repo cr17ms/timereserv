@@ -13,6 +13,11 @@ class RegisterForm(forms.Form):
     type = forms.ChoiceField(choices=TYPE, required=True)
 
 
+class SingInForm(forms.Form):
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput())
+
+
 class TimeExplainerForm(forms.ModelForm):
     class Meta:
         model = Time
