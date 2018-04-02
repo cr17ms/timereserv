@@ -1,3 +1,6 @@
 from django.contrib import admin
+from website.models import UserProfile, Time
 
-# Register your models here.
+
+admin.site.register(UserProfile)
+admin.site.register(Time)
